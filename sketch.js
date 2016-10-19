@@ -3,22 +3,19 @@ var totalBalls = 80;
 var e = 1; //elasticity
 var backgroundColor = [255,255,255];
 var minRad = 3;
-var maxRad = 66;
-var minInVel = -.2;
-var maxInVel = .2;
-var maxTrailLength = 50;
+var maxRad = 6;
+
 
 var balls = [];
 function ball(x,y,r){
 	this.x = x;
 	this.y = y;
 	this.r = r;
-	this.velx = random(minInVel,maxInVel);
-	this.vely = random(minInVel,maxInVel);
+	this.velx = random(-.1,.1);
+	this.vely = random(-.1,.1);
 	this.mass = r*r;
 	this.forcex = 0;
 	this.forcey = 0;
-	this.history = [createVector(this.x, this.y)];
 	this.color = [random(0,255), random(0,255), random(0,255)];
 	this.isOverlap = function(otherBall){
 		if(dist(this.x, this.y, otherBall.x, otherBall.y) < this.r + otherBall.r || 
@@ -48,31 +45,15 @@ function setup() {
 			balls.push(newBall);
 		}
 	}
-	maxTrailLength = Math.sqrt(width*height)/20;
 }
-
-function drawTail(history, c){
-	noFill();
-	//beginShape();
-	for(var i = 0; i < history.length-1; i++){
-		var alpha = map(i, 0, history.length-2, 0, 255);
-		stroke(c[0], c[1], c[2], alpha);
-		line(history[i].x, history[i].y, history[i+1].x, history[i+1].y);
-		//vertex(history[i].x, history[i].y);
-	}
-	//endShape();
-}
-
 function draw() {
 	background(backgroundColor);
 	update();
 	for(i = 0; i < balls.length; i++){
-		drawTail(balls[i].history, balls[i].color);
 		fill(balls[i].color);
 		noStroke();
 		ellipse(balls[i].x, balls[i].y, 2*balls[i].r, 2*balls[i].r);
 	}
-	console.log(balls.length);
 }
 function update(){
 
@@ -113,26 +94,12 @@ function update(){
 			}
 
 			
-
 			balls[i].x += balls[i].velx;
 			balls[i].y += balls[i].vely;
+
 			balls[j].x += balls[j].velx;
 			balls[j].y += balls[j].vely;
-			
-
 		}
-
-		balls[i].history.push(createVector(balls[i].x, balls[i].y));
-		if(balls[i].history.length > maxTrailLength){
-			balls[i].history.splice(0,1);
-		}
-		//println(balls[i].history);
-	}
-
-	// Adding trail of last ball
-	balls[balls.length - 1].history.push(createVector(balls[balls.length - 1].x, balls[balls.length - 1].y));
-	if(balls[balls.length - 1].history.length > maxTrailLength){
-		balls[balls.length - 1].history.splice(0,1);
 	}
 	for(i = 0; i < balls.length - 1; i++){
 		for(j = i+1; j < balls.length; j++){
