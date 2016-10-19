@@ -72,7 +72,6 @@ function draw() {
 		noStroke();
 		ellipse(balls[i].x, balls[i].y, 2*balls[i].r, 2*balls[i].r);
 	}
-	console.log(balls.length);
 }
 function update(){
 
